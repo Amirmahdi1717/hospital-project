@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>افزودن پزشک | بیمارستان سلامت</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <nav>
+        <h2>🏥 بیمارستان سلامت</h2>
+
+        <div>
+            <a href="{% url 'dashboard' %}">داشبورد</a>
+            <a href="{% url 'home' %}">صفحه اصلی</a>
+        </div>
+    </nav>
+
+
+    <div class="appointment-box">
+
+        <h1>👨‍⚕️ افزودن پزشک</h1>
+
+        <p>
+            اطلاعات پزشک جدید را وارد کنید.
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                ➕ ثبت پزشک
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

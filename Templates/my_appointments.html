@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>نوبت‌های من | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        <a class="button" href="{% url 'appointment' %}">
+            📅 رزرو نوبت
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="doctors">
+
+    <h1>📋 نوبت‌های من</h1>
+
+    <p>
+        سلام {{ user.first_name|default:user.username }} 👋
+    </p>
+
+
+    <div class="doctor-container">
+
+        {% for item in appointments %}
+
+            <div class="doctor-card">
+
+                <h3>
+                    👨‍⚕️ نام پزشک:
+                    {{ item.doctor.name }}
+                </h3>
+
+                <p>
+                    🩺 تخصص:
+                    {{ item.doctor.specialty }}
+                </p>
+
+                <p>
+                    📞 شماره تماس:
+                    {{ item.doctor.phone }}
+                </p>
+
+                <p>
+                    📅 تاریخ نوبت:
+                    {{ item.date }}
+                </p>
+
+                <p>
+                    ⏰ ساعت نوبت:
+                    {{ item.time }}
+                </p>
+
+
+                <!-- لغو نوبت -->
+
+                <form
+                    method="POST"
+                    action="{% url 'cancel_appointment' item.id %}"
+                    style="margin-top: 15px;"
+                    onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟');"
+                >
+
+                    {% csrf_token %}
+
+                    <button type="submit">
+                        ❌ لغو نوبت
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% empty %}
+
+            <div class="doctor-card">
+
+                <h3>
+                    📭 نوبتی ندارید
+                </h3>
+
+                <p>
+                    هنوز هیچ نوبتی برای شما ثبت نشده است.
+                </p>
+
+                <br>
+
+                <a
+                    class="button"
+                    href="{% url 'appointment' %}"
+                >
+                    📅 رزرو اولین نوبت
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+</body>
+
+</html>

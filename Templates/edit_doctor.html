@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ویرایش پزشک</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<nav>
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <a href="{% url 'dashboard' %}">
+        داشبورد
+    </a>
+</nav>
+
+<div class="appointment-box">
+
+    <h1>✏️ ویرایش پزشک</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            💾 ذخیره تغییرات
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

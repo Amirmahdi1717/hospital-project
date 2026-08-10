@@ -1,0 +1,309 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     Navbar
+========================= -->
+
+<nav>
+
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            خانه
+        </a>
+
+        {% if user.is_authenticated %}
+
+            <a class="button"
+               href="{% url 'my_appointments' %}">
+                📋 نوبت‌های من
+            </a>
+
+            {% if user.is_staff %}
+
+                <a class="button"
+                   href="{% url 'dashboard' %}">
+                    📊 داشبورد مدیریت
+                </a>
+
+            {% endif %}
+
+            <form
+                method="POST"
+                action="{% url 'logout' %}"
+                style="display:inline;"
+            >
+
+                {% csrf_token %}
+
+                <button type="submit">
+                    🚪 خروج
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">
+                🔐 ورود
+            </a>
+
+            <a class="button"
+               href="{% url 'register' %}">
+                📝 ثبت نام
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     Hero
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            🏥 خدمات پزشکی مطمئن و سریع
+        </span>
+
+        <h1>
+            سلامتی شما،
+            <br>
+            اولویت ماست 💙
+        </h1>
+
+        <p>
+            با بهترین پزشکان بیمارستان سلامت
+            به راحتی نوبت خود را رزرو کنید.
+        </p>
+
+        <div class="hero-buttons">
+
+            {% if user.is_authenticated %}
+
+                <a
+                    class="button"
+                    href="{% url 'appointment' %}"
+                >
+                    📅 دریافت نوبت
+                </a>
+
+                <a
+                    class="hero-secondary-button"
+                    href="{% url 'my_appointments' %}"
+                >
+                    📋 نوبت‌های من
+                </a>
+
+            {% else %}
+
+                <a
+                    class="button"
+                    href="{% url 'login' %}"
+                >
+                    📅 دریافت نوبت
+                </a>
+
+                <a
+                    class="hero-secondary-button"
+                    href="{% url 'register' %}"
+                >
+                    📝 ایجاد حساب
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Features
+========================= -->
+
+<section class="features">
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            👨‍⚕️
+        </div>
+
+        <h3>
+            پزشکان متخصص
+        </h3>
+
+        <p>
+            دسترسی به پزشکان با تخصص‌های مختلف
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            📅
+        </div>
+
+        <h3>
+            نوبت‌دهی آسان
+        </h3>
+
+        <p>
+            نوبت خود را سریع و آنلاین رزرو کنید
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            🔒
+        </div>
+
+        <h3>
+            اطلاعات امن
+        </h3>
+
+        <p>
+            اطلاعات حساب و نوبت‌های شما محفوظ است
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Doctors
+========================= -->
+
+<section class="doctors">
+
+    <span class="section-badge">
+        تیم پزشکی ما
+    </span>
+
+    <h2>
+        👨‍⚕️ پزشکان ما
+    </h2>
+
+    <p class="section-description">
+        پزشک موردنظر خود را انتخاب کنید و برای دریافت نوبت اقدام کنید.
+    </p>
+
+
+    <div class="doctor-container">
+
+        {% for doctor in doctors %}
+
+            <div class="doctor-card">
+
+                <div class="doctor-icon">
+                    👨‍⚕️
+                </div>
+
+                <h3>
+                    {{ doctor.name }}
+                </h3>
+
+                <p>
+                    🩺 {{ doctor.specialty }}
+                </p>
+
+                <p>
+                    📞 {{ doctor.phone }}
+                </p>
+
+
+                <a
+                    class="button"
+                    href="{% url 'doctor_detail' doctor.id %}"
+                >
+                    مشاهده پزشک
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <div class="doctor-card">
+
+                <div class="doctor-icon">
+                    🏥
+                </div>
+
+                <h3>
+                    پزشک موجود نیست
+                </h3>
+
+                <p>
+                    هنوز پزشکی در سیستم ثبت نشده است.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Footer
+========================= -->
+
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        ارائه خدمات پزشکی با کیفیت و مطمئن
+    </p>
+
+    <p>
+        © 2026 بیمارستان سلامت
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

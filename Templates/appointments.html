@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>نوبت‌های بیمارستان</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <nav>
+        <h2>🏥 بیمارستان سلامت</h2>
+
+        <a href="{% url 'home' %}">
+            صفحه اصلی
+        </a>
+    </nav>
+
+
+    <section class="doctors">
+
+        <h1>📋 لیست نوبت‌ها</h1>
+
+        {% for item in appointments %}
+
+            <div class="doctor-card">
+
+                <h3>
+                    👤 {{ item.patient_name }}
+                </h3>
+
+                <p>
+                    👨‍⚕️ پزشک:
+                    {{ item.doctor.name }}
+                </p>
+
+                <p>
+                    🩺 تخصص:
+                    {{ item.doctor.specialty }}
+                </p>
+
+                <p>
+                    📅 تاریخ:
+                    {{ item.date }}
+                </p>
+
+                <p>
+                    ⏰ ساعت:
+                    {{ item.time }}
+                </p>
+
+
+                <form
+                    method="POST"
+                    action="{% url 'delete_appointment' item.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button type="submit">
+                        🗑️ حذف نوبت
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                هنوز هیچ نوبتی ثبت نشده است.
+            </p>
+
+        {% endfor %}
+
+    </section>
+
+</body>
+
+</html>

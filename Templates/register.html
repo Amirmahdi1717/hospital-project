@@ -1,0 +1,170 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ثبت نام | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body class="login-page">
+
+
+<div class="login-card register-card">
+
+    <div class="login-icon">
+        📝
+    </div>
+
+    <h1>
+        ثبت نام بیمار
+    </h1>
+
+    <p class="login-description">
+        برای استفاده از خدمات بیمارستان حساب کاربری خود را ایجاد کنید
+    </p>
+
+
+    {% if form.errors %}
+
+        <div class="login-error">
+            ❌ لطفاً اطلاعات وارد شده را بررسی کنید.
+        </div>
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="login-field">
+
+            <label for="id_username">
+                نام کاربری
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                id="id_username"
+                placeholder="نام کاربری"
+                required
+            >
+
+        </div>
+
+
+        <div class="login-field">
+
+            <label for="id_first_name">
+                نام
+            </label>
+
+            <input
+                type="text"
+                name="first_name"
+                id="id_first_name"
+                placeholder="نام"
+                required
+            >
+
+        </div>
+
+
+        <div class="login-field">
+
+            <label for="id_last_name">
+                نام خانوادگی
+            </label>
+
+            <input
+                type="text"
+                name="last_name"
+                id="id_last_name"
+                placeholder="نام خانوادگی"
+                required
+            >
+
+        </div>
+
+
+        <div class="login-field">
+
+            <label for="id_password">
+                رمز عبور
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                id="id_password"
+                placeholder="رمز عبور"
+                required
+            >
+
+        </div>
+
+
+        <div class="login-field">
+
+            <label for="id_password2">
+                تکرار رمز عبور
+            </label>
+
+            <input
+                type="password"
+                name="password2"
+                id="id_password2"
+                placeholder="تکرار رمز عبور"
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="login-button"
+        >
+            ثبت نام
+        </button>
+
+    </form>
+
+
+    <div class="login-links">
+
+        قبلاً حساب ساخته‌اید؟
+
+        <a href="{% url 'login' %}">
+            ورود
+        </a>
+
+    </div>
+
+
+    <a
+        href="{% url 'home' %}"
+        class="back-home"
+    >
+        ← بازگشت به صفحه اصلی
+    </a>
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ورود | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body class="login-page">
+
+
+<div class="login-card">
+
+    <div class="login-icon">
+        🏥
+    </div>
+
+    <h1>
+        ورود کاربر
+    </h1>
+
+    <p class="login-description">
+        اطلاعات خود را به منظور ورود به سیستم وارد نمایید
+    </p>
+
+
+    {% if form.errors %}
+
+        <div class="login-error">
+            ❌ نام کاربری یا رمز عبور اشتباه است.
+        </div>
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="login-field">
+
+            <label for="id_username">
+                نام کاربری
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                id="id_username"
+                placeholder="نام کاربری"
+                autocomplete="username"
+                required
+            >
+
+        </div>
+
+
+        <div class="login-field">
+
+            <label for="id_password">
+                گذرواژه
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                id="id_password"
+                placeholder="گذرواژه"
+                autocomplete="current-password"
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="login-button"
+        >
+            ورود
+        </button>
+
+    </form>
+
+
+    <div class="login-links">
+
+        <a href="#">
+            فراموشی رمز عبور
+        </a>
+
+        <span> | </span>
+
+        <a href="{% url 'register' %}">
+            ثبت نام بیمار
+        </a>
+
+    </div>
+
+
+    <a
+        href="{% url 'home' %}"
+        class="back-home"
+    >
+        ← بازگشت به صفحه اصلی
+    </a>
+
+</div>
+
+
+</body>
+
+</html>

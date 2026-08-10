@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>رزرو نوبت | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        {% if user.is_authenticated %}
+
+            <a class="button"
+               href="{% url 'my_appointments' %}">
+                📋 نوبت‌های من
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<section class="appointment-page">
+
+    <div class="appointment-header">
+
+        <span class="hero-badge">
+            📅 نوبت‌دهی آنلاین
+        </span>
+
+        <h1>
+            رزرو نوبت پزشکی
+        </h1>
+
+        <p>
+            اطلاعات نوبت خود را وارد کنید و وقت خود را رزرو کنید.
+        </p>
+
+    </div>
+
+
+    <div class="appointment-box">
+
+        <div class="appointment-icon">
+            🏥
+        </div>
+
+        <h2>
+            اطلاعات نوبت
+        </h2>
+
+        <p class="form-description">
+            لطفاً اطلاعات زیر را با دقت وارد کنید.
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                📅 ثبت نوبت
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        ارائه خدمات پزشکی با کیفیت و مطمئن
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
