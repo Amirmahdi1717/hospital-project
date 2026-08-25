@@ -82,6 +82,30 @@ def dashboard(request):
 
 
 @staff_member_required(login_url="/login/")
+def update_appointment_status(request, appointment_id):
+    if request.method == "POST":
+        appointment = Appointment.objects.filter(
+            id=appointment_id
+        ).first()
+
+        if appointment:
+            new_status = request.POST.get("status")
+
+            valid_statuses = [
+                "pending",
+                "confirmed",
+                "cancelled",
+                "completed",
+            ]
+
+            if new_status in valid_statuses:
+                appointment.status = new_status
+                appointment.save()
+
+    return redirect("dashboard")
+
+
+@staff_member_required(login_url="/login/")
 def add_doctor(request):
 
     if request.method == "POST":

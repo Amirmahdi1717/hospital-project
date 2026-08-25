@@ -15,6 +15,7 @@ urlpatterns = [
     path("my-appointments/cancel/<int:appointment_id>/",cancel_appointment,name="cancel_appointment"),
     path("profile/", profile, name="profile"),
     path("profile/edit/",edit_profile,name="edit_profile"),
+    path("appointments/update-status/<int:appointment_id>/",update_appointment_status,name="update_appointment_status"),
 
     
 ]

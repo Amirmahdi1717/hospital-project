@@ -2868,3 +2868,18 @@ footer span {
     background: #cfe2ff;
     color: #084298;
 }
+
+.appointment-dashboard-info select {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 7px 12px;
+    background: white;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.appointment-dashboard-info select:focus {
+    border-color: #2563eb;
+}

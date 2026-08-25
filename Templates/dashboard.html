@@ -333,7 +333,7 @@
                 </h2>
 
                 <p>
-                    آخرین نوبت‌های ثبت شده در بیمارستان
+                    مدیریت و تغییر وضعیت نوبت‌های بیمارستان
                 </p>
 
             </div>
@@ -399,7 +399,7 @@
                         </span>
 
 
-                        <!-- Status -->
+                        <!-- Current Status -->
 
                         {% if appointment.status == "pending" %}
 
@@ -437,6 +437,57 @@
                             </span>
 
                         {% endif %}
+
+
+
+                        <!-- Change Status -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'update_appointment_status' appointment.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <select
+                                name="status"
+                                onchange="this.form.submit()"
+                            >
+
+                                <option
+                                    value="pending"
+                                    {% if appointment.status == "pending" %}selected{% endif %}
+                                >
+                                    🟡 در انتظار
+                                </option>
+
+
+                                <option
+                                    value="confirmed"
+                                    {% if appointment.status == "confirmed" %}selected{% endif %}
+                                >
+                                    🟢 تأیید شده
+                                </option>
+
+
+                                <option
+                                    value="cancelled"
+                                    {% if appointment.status == "cancelled" %}selected{% endif %}
+                                >
+                                    🔴 لغو شده
+                                </option>
+
+
+                                <option
+                                    value="completed"
+                                    {% if appointment.status == "completed" %}selected{% endif %}
+                                >
+                                    🔵 انجام شده
+                                </option>
+
+                            </select>
+
+                        </form>
 
 
                     </div>
