@@ -3,6 +3,8 @@ from .models import Doctor, Appointment
 from .forms import AppointmentForm , DoctorForm , RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
+from django.db.models import Count
 # from django.contrib import messages
 
 
@@ -59,26 +61,56 @@ def delete_appointment(request, appointment_id):
 
 @staff_member_required(login_url="/login/")
 def dashboard(request):
+
     doctors = Doctor.objects.all()
-    appointments = Appointment.objects.all().order_by("-date", "-time")
 
-    patients = Appointment.objects.values("patient").distinct()
+    appointments = Appointment.objects.all().order_by(
+        "-date",
+        "-time"
+    )
 
-    pending_count = appointments.filter(status="pending").count()
-    confirmed_count = appointments.filter(status="confirmed").count()
-    cancelled_count = appointments.filter(status="cancelled").count()
-    completed_count = appointments.filter(status="completed").count()
+    patients = (
+        User.objects
+        .filter(appointment__isnull=False)
+        .annotate(
+            appointment_count=Count(
+                "appointment",
+                distinct=True
+            )
+        )
+        .distinct()
+    )
 
-    return render(request, "dashboard.html", {
-        "doctors": doctors,
-        "appointments": appointments,
-        "patients": patients,
+    pending_count = appointments.filter(
+        status="pending"
+    ).count()
 
-        "pending_count": pending_count,
-        "confirmed_count": confirmed_count,
-        "cancelled_count": cancelled_count,
-        "completed_count": completed_count,
-    })
+    confirmed_count = appointments.filter(
+        status="confirmed"
+    ).count()
+
+    cancelled_count = appointments.filter(
+        status="cancelled"
+    ).count()
+
+    completed_count = appointments.filter(
+        status="completed"
+    ).count()
+
+    return render(
+        request,
+        "dashboard.html",
+        {
+            "doctors": doctors,
+            "appointments": appointments,
+            "patients": patients,
+
+            "pending_count": pending_count,
+            "confirmed_count": confirmed_count,
+            "cancelled_count": cancelled_count,
+            "completed_count": completed_count,
+        }
+    )
 
 
 @staff_member_required(login_url="/login/")
@@ -243,3 +275,28 @@ def edit_profile(request):
         return redirect("profile")
 
     return render(request, "edit_profile.html")
+
+@staff_member_required(login_url="/login/")
+def patient_detail(request, patient_id):
+
+    patient = User.objects.get(
+        id=patient_id
+    )
+
+    appointments = Appointment.objects.filter(
+        patient=patient
+    ).select_related(
+        "doctor"
+    ).order_by(
+        "-date",
+        "-time"
+    )
+
+    return render(
+        request,
+        "patient_detail.html",
+        {
+            "patient": patient,
+            "appointments": appointments,
+        }
+    )

@@ -1,0 +1,324 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        اطلاعات بیمار | بیمارستان سلامت
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<!-- ==================== NAVBAR ==================== -->
+
+<nav>
+
+    <h2>
+        🏥 بیمارستان سلامت
+    </h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        <a href="{% url 'dashboard' %}">
+            📊 داشبورد
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ==================== PATIENT DETAIL ==================== -->
+
+<section class="dashboard">
+
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <span class="hero-badge">
+            👤 اطلاعات بیمار
+        </span>
+
+        <h1>
+            {{ patient.get_full_name|default:patient.username }}
+        </h1>
+
+        <p>
+            مشاهده اطلاعات و نوبت‌های ثبت شده برای این بیمار
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PATIENT INFO ==================== -->
+
+    <div class="dashboard-section">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    👤 مشخصات بیمار
+                </h2>
+
+                <p>
+                    اطلاعات حساب کاربری بیمار
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="patient-info-grid">
+
+
+            <div class="patient-info-card">
+
+                <span>
+                    👤 نام و نام خانوادگی
+                </span>
+
+                <strong>
+                    {% if patient.get_full_name %}
+                        {{ patient.get_full_name }}
+                    {% else %}
+                        {{ patient.username }}
+                    {% endif %}
+                </strong>
+
+            </div>
+
+
+            <div class="patient-info-card">
+
+                <span>
+                    🪪 نام کاربری
+                </span>
+
+                <strong>
+                    {{ patient.username }}
+                </strong>
+
+            </div>
+
+
+            <div class="patient-info-card">
+
+                <span>
+                    📧 ایمیل
+                </span>
+
+                <strong>
+                    {% if patient.email %}
+                        {{ patient.email }}
+                    {% else %}
+                        ثبت نشده
+                    {% endif %}
+                </strong>
+
+            </div>
+
+
+            <div class="patient-info-card">
+
+                <span>
+                    📅 تعداد نوبت‌ها
+                </span>
+
+                <strong>
+                    {{ appointments.count }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================== APPOINTMENTS ==================== -->
+
+    <div class="dashboard-section">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    📅 نوبت‌های بیمار
+                </h2>
+
+                <p>
+                    تمام نوبت‌های ثبت شده برای این بیمار
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-table">
+
+
+            {% for appointment in appointments %}
+
+
+                <div class="dashboard-row">
+
+
+                    <!-- Doctor -->
+
+                    <div class="dashboard-doctor">
+
+
+                        <div class="doctor-mini-icon">
+                            👨‍⚕️
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {{ appointment.doctor.name }}
+                            </strong>
+
+                            <span>
+                                🩺 {{ appointment.doctor.specialty }}
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- Date & Time -->
+
+                    <div class="appointment-dashboard-info">
+
+                        <span>
+                            📅 {{ appointment.date }}
+                        </span>
+
+                        <span>
+                            ⏰ {{ appointment.time }}
+                        </span>
+
+
+                        {% if appointment.status == "pending" %}
+
+                            <span class="status pending">
+                                🟡 در انتظار
+                            </span>
+
+                        {% elif appointment.status == "confirmed" %}
+
+                            <span class="status confirmed">
+                                🟢 تأیید شده
+                            </span>
+
+                        {% elif appointment.status == "cancelled" %}
+
+                            <span class="status cancelled">
+                                🔴 لغو شده
+                            </span>
+
+                        {% elif appointment.status == "completed" %}
+
+                            <span class="status completed">
+                                🔵 انجام شده
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <div class="dashboard-empty">
+
+                    📭 این بیمار هنوز هیچ نوبتی ثبت نکرده است.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Back Button -->
+
+    <div class="patient-back-button">
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="button"
+        >
+            ⬅️ بازگشت به داشبورد
+        </a>
+
+    </div>
+
+
+</section>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        پنل مدیریت بیمارستان
+    </p>
+
+</footer>
+
+
+</body>
+
+</h

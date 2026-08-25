@@ -8,13 +8,19 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>داشبورد مدیریت | بیمارستان سلامت</title>
+    <title>
+        داشبورد مدیریت | بیمارستان سلامت
+    </title>
 
-    <link rel="stylesheet"
-          href="{% static 'css/style.css' %}">
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
 
 </head>
 
@@ -22,7 +28,8 @@
 <body class="dashboard-page">
 
 
-<!-- Navigation -->
+<!-- ==================== NAVBAR ==================== -->
+
 <nav>
 
     <h2>
@@ -35,8 +42,10 @@
             🏠 صفحه اصلی
         </a>
 
-        <a class="button"
-           href="{% url 'add_doctor' %}">
+        <a
+            class="button"
+            href="{% url 'add_doctor' %}"
+        >
             👨‍⚕️ افزودن پزشک
         </a>
 
@@ -45,11 +54,13 @@
 </nav>
 
 
-<!-- Dashboard -->
+<!-- ==================== DASHBOARD ==================== -->
+
 <section class="dashboard">
 
 
-    <!-- Header -->
+    <!-- ==================== HEADER ==================== -->
+
     <div class="dashboard-header">
 
         <span class="hero-badge">
@@ -61,17 +72,19 @@
         </h1>
 
         <p>
-            مدیریت پزشکان و نوبت‌های بیمارستان
+            مدیریت پزشکان، بیماران و نوبت‌های بیمارستان
         </p>
 
     </div>
 
 
-    <!-- Statistics -->
+    <!-- ==================== STATISTICS ==================== -->
+
     <div class="dashboard-stats">
 
 
         <!-- Doctors -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -94,6 +107,7 @@
 
 
         <!-- Appointments -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -116,6 +130,7 @@
 
 
         <!-- Patients -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -138,6 +153,7 @@
 
 
         <!-- Pending -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -160,6 +176,7 @@
 
 
         <!-- Confirmed -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -182,6 +199,7 @@
 
 
         <!-- Cancelled -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -204,6 +222,7 @@
 
 
         <!-- Completed -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -228,8 +247,8 @@
     </div>
 
 
+    <!-- ==================== DOCTORS ==================== -->
 
-    <!-- Doctors Section -->
     <div class="dashboard-section">
 
 
@@ -248,15 +267,14 @@
             </div>
 
 
-            <a class="button"
-               href="{% url 'add_doctor' %}">
-
+            <a
+                class="button"
+                href="{% url 'add_doctor' %}"
+            >
                 + افزودن پزشک
-
             </a>
 
         </div>
-
 
 
         <div class="dashboard-table">
@@ -264,16 +282,17 @@
 
             {% for doctor in doctors %}
 
+
                 <div class="dashboard-row">
 
 
                     <!-- Doctor -->
+
                     <div class="dashboard-doctor">
 
                         <div class="doctor-mini-icon">
                             👨‍⚕️
                         </div>
-
 
                         <div>
 
@@ -290,11 +309,53 @@
                     </div>
 
 
-
                     <!-- Phone -->
+
                     <div>
 
                         📞 {{ doctor.phone }}
+
+                    </div>
+
+
+                    <!-- Actions -->
+
+                    <div class="doctor-actions">
+
+
+                        <a
+                            href="{% url 'doctor_detail' doctor.id %}"
+                            class="doctor-action view"
+                        >
+                            👁️ مشاهده
+                        </a>
+
+
+                        <a
+                            href="{% url 'edit_doctor' doctor.id %}"
+                            class="doctor-action edit"
+                        >
+                            ✏️ ویرایش
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{% url 'delete_doctor' doctor.id %}"
+                            onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید این پزشک را حذف کنید؟');"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="doctor-action delete"
+                            >
+                                🗑️ حذف
+                            </button>
+
+                        </form>
+
 
                     </div>
 
@@ -304,11 +365,13 @@
 
             {% empty %}
 
+
                 <div class="dashboard-empty">
 
                     هنوز پزشکی ثبت نشده است.
 
                 </div>
+
 
             {% endfor %}
 
@@ -319,8 +382,126 @@
     </div>
 
 
+    <!-- ==================== PATIENTS ==================== -->
 
-    <!-- Appointments Section -->
+    <div class="dashboard-section">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    👥 بیماران
+                </h2>
+
+                <p>
+                    بیمارانی که برای آن‌ها نوبت ثبت شده است
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-table">
+
+
+            {% for patient in patients %}
+
+
+                <div class="dashboard-row">
+
+
+                    <!-- Patient -->
+
+                    <div class="dashboard-doctor">
+
+
+                        <div class="doctor-mini-icon">
+                            👤
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+
+                                {% if patient.get_full_name %}
+
+                                    {{ patient.get_full_name }}
+
+                                {% else %}
+
+                                    {{ patient.username }}
+
+                                {% endif %}
+
+                            </strong>
+
+
+                            <span>
+
+                                نام کاربری:
+                                {{ patient.username }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- Appointment Count -->
+
+                    <div class="patient-actions">
+
+                        <span>
+
+                            📅
+                            {{ patient.appointment_count }}
+                            نوبت
+
+                        </span>
+
+
+                        <!-- View Patient -->
+
+                        <a
+                            href="{% url 'patient_detail' patient.id %}"
+                            class="doctor-action view"
+                        >
+                            👁️ مشاهده
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <div class="dashboard-empty">
+
+                    👥 هنوز بیماری با نوبت ثبت نشده است.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================== APPOINTMENTS ==================== -->
+
     <div class="dashboard-section appointments-dashboard">
 
 
@@ -341,7 +522,6 @@
         </div>
 
 
-
         <div class="dashboard-table">
 
 
@@ -352,6 +532,7 @@
 
 
                     <!-- Patient & Doctor -->
+
                     <div class="dashboard-doctor">
 
 
@@ -361,6 +542,7 @@
 
 
                         <div>
+
 
                             <strong>
                                 {{ appointment.patient_name }}
@@ -374,14 +556,23 @@
 
                             </span>
 
+
+                            <span>
+
+                                🩺
+                                {{ appointment.doctor.specialty }}
+
+                            </span>
+
+
                         </div>
 
 
                     </div>
 
 
-
                     <!-- Appointment Information -->
+
                     <div class="appointment-dashboard-info">
 
 
@@ -439,7 +630,6 @@
                         {% endif %}
 
 
-
                         <!-- Change Status -->
 
                         <form
@@ -449,14 +639,18 @@
 
                             {% csrf_token %}
 
+
                             <select
                                 name="status"
                                 onchange="this.form.submit()"
                             >
 
+
                                 <option
                                     value="pending"
-                                    {% if appointment.status == "pending" %}selected{% endif %}
+                                    {% if appointment.status == "pending" %}
+                                        selected
+                                    {% endif %}
                                 >
                                     🟡 در انتظار
                                 </option>
@@ -464,7 +658,9 @@
 
                                 <option
                                     value="confirmed"
-                                    {% if appointment.status == "confirmed" %}selected{% endif %}
+                                    {% if appointment.status == "confirmed" %}
+                                        selected
+                                    {% endif %}
                                 >
                                     🟢 تأیید شده
                                 </option>
@@ -472,7 +668,9 @@
 
                                 <option
                                     value="cancelled"
-                                    {% if appointment.status == "cancelled" %}selected{% endif %}
+                                    {% if appointment.status == "cancelled" %}
+                                        selected
+                                    {% endif %}
                                 >
                                     🔴 لغو شده
                                 </option>
@@ -480,12 +678,16 @@
 
                                 <option
                                     value="completed"
-                                    {% if appointment.status == "completed" %}selected{% endif %}
+                                    {% if appointment.status == "completed" %}
+                                        selected
+                                    {% endif %}
                                 >
                                     🔵 انجام شده
                                 </option>
 
+
                             </select>
+
 
                         </form>
 
@@ -518,8 +720,8 @@
 </section>
 
 
+<!-- ==================== FOOTER ==================== -->
 
-<!-- Footer -->
 <footer>
 
     <h3>
@@ -533,7 +735,5 @@
 </footer>
 
 
-</body>
-
-</html>
+</bod</html>
 

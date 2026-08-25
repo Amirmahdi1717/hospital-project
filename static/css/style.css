@@ -2883,3 +2883,113 @@ footer span {
 .appointment-dashboard-info select:focus {
     border-color: #2563eb;
 }
+
+
+.doctor-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.doctor-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: none;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.doctor-action.view {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.doctor-action.edit {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.doctor-action.delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.doctor-action:hover {
+    transform: translateY(-1px);
+    opacity: 0.85;
+}
+
+/* فاصله بین بخش‌های داشبورد */
+
+.dashboard-section {
+    margin-bottom: 32px;
+}
+
+/* فاصله مخصوص بخش بیماران */
+
+.dashboard-section + .dashboard-section {
+    margin-top: 32px;
+}
+
+/* آخرین بخش فاصله اضافه نداشته باشد */
+
+.dashboard-section:last-child {
+    margin-bottom: 0;
+}
+
+.patient-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.patient-info-card {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.patient-info-card span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.patient-info-card strong {
+    color: #1e293b;
+    font-size: 17px;
+}
+
+.patient-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.patient-back-button {
+    margin-top: 25px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+
+    .patient-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-actions {
+        width: 100%;
+    }
+
+}
