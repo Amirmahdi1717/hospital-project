@@ -13,7 +13,8 @@ urlpatterns = [
     path("register/" ,register, name="register"),
     path("my-appointments/",my_appointments,name="my_appointments"),
     path("my-appointments/cancel/<int:appointment_id>/",cancel_appointment,name="cancel_appointment"),
-    
+    path("profile/", profile, name="profile"),
+    path("profile/edit/",edit_profile,name="edit_profile"),
 
     
 ]

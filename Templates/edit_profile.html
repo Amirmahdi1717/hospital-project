@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ویرایش پروفایل | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+</head>
+
+<body class="profile-page">
+
+
+<div class="profile-card">
+
+    <div class="profile-avatar">
+        ✏️
+    </div>
+
+    <h1>
+        ویرایش پروفایل
+    </h1>
+
+    <p class="profile-welcome">
+        اطلاعات شخصی خود را ویرایش کنید
+    </p>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="edit-field">
+
+            <label for="first_name">
+                نام
+            </label>
+
+            <input
+                type="text"
+                id="first_name"
+                name="first_name"
+                value="{{ user.first_name }}"
+                placeholder="نام خود را وارد کنید"
+                required
+            >
+
+        </div>
+
+
+        <div class="edit-field">
+
+            <label for="last_name">
+                نام خانوادگی
+            </label>
+
+            <input
+                type="text"
+                id="last_name"
+                name="last_name"
+                value="{{ user.last_name }}"
+                placeholder="نام خانوادگی خود را وارد کنید"
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="button edit-submit"
+        >
+            💾 ذخیره تغییرات
+        </button>
+
+    </form>
+
+
+    <a
+        href="{% url 'profile' %}"
+        class="profile-back"
+    >
+        ← انصراف
+    </a>
+
+</div>
+
+
+</body>
+
+</html>

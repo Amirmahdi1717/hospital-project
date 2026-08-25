@@ -1,23 +1,19 @@
+```html
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>نوبت‌های من | بیمارستان سلامت</title>
 
-    <link rel="stylesheet"
-          href="{% static 'css/style.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
-<body>
+<body class="appointments-page">
 
 <nav>
 
@@ -38,85 +34,209 @@
 </nav>
 
 
-<section class="doctors">
+<section class="appointments-section">
 
-    <h1>📋 نوبت‌های من</h1>
+    <div class="appointments-header">
 
-    <p>
-        سلام {{ user.first_name|default:user.username }} 👋
-    </p>
+        <span class="hero-badge">
+            📋 مدیریت نوبت‌ها
+        </span>
+
+        <h1>
+            نوبت‌های من
+        </h1>
+
+        <p>
+            سلام {{ user.first_name|default:user.username }} 👋
+            <br>
+            در این قسمت می‌توانید نوبت‌های خود را مشاهده کنید.
+        </p>
+
+    </div>
 
 
-    <div class="doctor-container">
+    <div class="appointments-container">
 
         {% for item in appointments %}
 
-            <div class="doctor-card">
+            <div class="appointment-card">
 
-                <h3>
-                    👨‍⚕️ نام پزشک:
-                    {{ item.doctor.name }}
-                </h3>
+                <!-- اطلاعات پزشک -->
+                <div class="appointment-card-top">
 
-                <p>
-                    🩺 تخصص:
-                    {{ item.doctor.specialty }}
-                </p>
+                    <div class="doctor-mini-icon">
+                        👨‍⚕️
+                    </div>
 
-                <p>
-                    📞 شماره تماس:
-                    {{ item.doctor.phone }}
-                </p>
+                    <div>
 
-                <p>
-                    📅 تاریخ نوبت:
-                    {{ item.date }}
-                </p>
+                        <span class="appointment-label">
+                            پزشک
+                        </span>
 
-                <p>
-                    ⏰ ساعت نوبت:
-                    {{ item.time }}
-                </p>
+                        <h2>
+                            {{ item.doctor.name }}
+                        </h2>
+
+                        <p class="doctor-specialty">
+                            🩺 {{ item.doctor.specialty }}
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-                <!-- لغو نوبت -->
+                <!-- وضعیت نوبت -->
+                <div class="appointment-status">
 
-                <form
-                    method="POST"
-                    action="{% url 'cancel_appointment' item.id %}"
-                    style="margin-top: 15px;"
-                    onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟');"
-                >
+                    {% if item.status == "pending" %}
 
-                    {% csrf_token %}
+                        <span class="status pending">
+                            🟡 در انتظار
+                        </span>
 
-                    <button type="submit">
-                        ❌ لغو نوبت
-                    </button>
+                    {% elif item.status == "confirmed" %}
 
-                </form>
+                        <span class="status confirmed">
+                            🟢 تأیید شده
+                        </span>
+
+                    {% elif item.status == "cancelled" %}
+
+                        <span class="status cancelled">
+                            🔴 لغو شده
+                        </span>
+
+                    {% elif item.status == "completed" %}
+
+                        <span class="status completed">
+                            🔵 انجام شده
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- اطلاعات نوبت -->
+                <div class="appointment-info">
+
+                    <div class="info-item">
+
+                        <span class="info-icon">
+                            📅
+                        </span>
+
+                        <div>
+
+                            <small>
+                                تاریخ نوبت
+                            </small>
+
+                            <strong>
+                                {{ item.date }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-icon">
+                            ⏰
+                        </span>
+
+                        <div>
+
+                            <small>
+                                ساعت نوبت
+                            </small>
+
+                            <strong>
+                                {{ item.time }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-icon">
+                            📞
+                        </span>
+
+                        <div>
+
+                            <small>
+                                شماره تماس پزشک
+                            </small>
+
+                            <strong>
+                                {{ item.doctor.phone }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- دکمه لغو نوبت -->
+                <div class="appointment-actions">
+
+                    {% if item.status == "pending" or item.status == "confirmed" %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'cancel_appointment' item.id %}"
+                            onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟');"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="cancel-button"
+                            >
+                                ❌ لغو نوبت
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
 
             </div>
 
         {% empty %}
 
-            <div class="doctor-card">
+            <!-- وقتی کاربر هیچ نوبتی ندارد -->
+            <div class="empty-appointments">
 
-                <h3>
-                    📭 نوبتی ندارید
-                </h3>
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h2>
+                    هنوز نوبتی ندارید
+                </h2>
 
                 <p>
-                    هنوز هیچ نوبتی برای شما ثبت نشده است.
+                    برای دریافت نوبت، پزشک موردنظر خود را انتخاب کنید.
                 </p>
-
-                <br>
 
                 <a
                     class="button"
                     href="{% url 'appointment' %}"
                 >
-                    📅 رزرو اولین نوبت
+                    📅 رزرو نوبت
                 </a>
 
             </div>
@@ -127,6 +247,20 @@
 
 </section>
 
-</body>
 
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        ارائه خدمات پزشکی با کیفیت و مطمئن
+    </p>
+
+</footer>
+
+
+</body>
 </html>
+```

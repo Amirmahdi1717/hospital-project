@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>پروفایل من | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<nav>
+
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        <a class="button"
+           href="{% url 'my_appointments' %}">
+            📋 نوبت‌های من
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="profile-page">
+
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+            👤
+        </div>
+
+        <h1>
+            پروفایل بیمار
+        </h1>
+
+        <p class="profile-welcome">
+            اطلاعات حساب کاربری شما
+        </p>
+
+
+        <div class="profile-info">
+
+            <div class="profile-item">
+
+                <span>👤 نام کاربری</span>
+
+                <strong>
+                    {{ user.username }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>🧑 نام</span>
+
+                <strong>
+                    {{ user.first_name|default:"ثبت نشده" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>👨‍👩‍👦 نام خانوادگی</span>
+
+                <strong>
+                    {{ user.last_name|default:"ثبت نشده" }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="profile-actions">
+
+            <a class="button" href="{% url 'edit_profile' %}">
+                ✏️ ویرایش پروفایل
+            </a>
+
+            <a
+                class="button"
+                href="{% url 'my_appointments' %}"
+            >
+                📋 مشاهده نوبت‌ها
+            </a>
+
+            <a
+                class="profile-back"
+                href="{% url 'home' %}"
+            >
+                ← بازگشت
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <h3>🏥 بیمارستان سلامت</h3>
+
+    <p>
+        ارائه خدمات پزشکی با کیفیت و مطمئن
+    </p>
+
+</footer>
+
+</body>
+
+</html>

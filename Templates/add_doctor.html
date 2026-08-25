@@ -5,47 +5,161 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>افزودن پزشک | بیمارستان سلامت</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
 </head>
 
 <body>
 
-    <nav>
-        <h2>🏥 بیمارستان سلامت</h2>
+<nav>
 
-        <div>
-            <a href="{% url 'dashboard' %}">داشبورد</a>
-            <a href="{% url 'home' %}">صفحه اصلی</a>
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        <a class="button"
+           href="{% url 'dashboard' %}">
+            📊 داشبورد
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="add-doctor-page">
+
+    <div class="add-doctor-card">
+
+        <div class="add-doctor-icon">
+            👨‍⚕️
         </div>
-    </nav>
 
+        <span class="hero-badge">
+            مدیریت پزشکان
+        </span>
 
-    <div class="appointment-box">
-
-        <h1>👨‍⚕️ افزودن پزشک</h1>
+        <h1>
+            افزودن پزشک جدید
+        </h1>
 
         <p>
-            اطلاعات پزشک جدید را وارد کنید.
+            اطلاعات پزشک را وارد کنید.
         </p>
+
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="success-message">
+                    ✅ {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
 
         <form method="POST">
 
             {% csrf_token %}
 
-            {{ form.as_p }}
+            <div class="doctor-field">
 
-            <button type="submit">
+                <label for="name">
+                    نام پزشک
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="مثلاً دکتر علی رضایی"
+                    required
+                >
+
+            </div>
+
+
+            <div class="doctor-field">
+
+                <label for="specialty">
+                    تخصص
+                </label>
+
+                <input
+                    type="text"
+                    id="specialty"
+                    name="specialty"
+                    placeholder="مثلاً متخصص قلب و عروق"
+                    required
+                >
+
+            </div>
+
+
+            <div class="doctor-field">
+
+                <label for="phone">
+                    شماره تماس
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    placeholder="مثلاً 09123456789"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="add-doctor-button"
+            >
                 ➕ ثبت پزشک
             </button>
 
         </form>
 
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="doctor-back"
+        >
+            ← بازگشت به داشبورد
+        </a>
+
     </div>
 
-</body>
+</section>
 
+
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        پنل مدیریت بیمارستان
+    </p>
+
+</footer>
+
+
+</body>
 </html>

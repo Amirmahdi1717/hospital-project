@@ -1,226 +1,488 @@
+
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>داشبورد | بیمارستان سلامت</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>داشبورد مدیریت | بیمارستان سلامت</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
 </head>
 
-<body>
 
-    <!-- Navbar -->
-    <nav>
-
-        <h2>🏥 پنل مدیریت بیمارستان</h2>
-
-        <div>
-
-            <a href="{% url 'home' %}">
-                صفحه اصلی
-            </a>
-
-            <a href="{% url 'appointments' %}">
-                نوبت‌ها
-            </a>
-
-        </div>
-
-        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-    {% csrf_token %}
-
-    <button type="submit">
-        🚪 خروج
-    </button>
-</form>
-
-    </nav>
+<body class="dashboard-page">
 
 
-    <!-- Dashboard -->
-    <section class="doctors">
+<!-- Navigation -->
+<nav>
 
-        <h1>📊 داشبورد مدیریت</h1>
+    <h2>
+        🏥 بیمارستان سلامت
+    </h2>
 
-        <br>
+    <div>
 
-        <!-- Add Doctor -->
-        <a class="button" href="{% url 'add_doctor' %}">
-            ➕ افزودن پزشک
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
         </a>
 
+        <a class="button"
+           href="{% url 'add_doctor' %}">
+            👨‍⚕️ افزودن پزشک
+        </a>
 
-        <!-- Statistics -->
-        <div class="doctor-container">
+    </div>
 
-            <!-- Doctors Count -->
-            <div class="doctor-card">
+</nav>
 
-                <h2>👨‍⚕️ پزشکان</h2>
 
-                <h1>
-                    {{ doctors|length }}
-                </h1>
+<!-- Dashboard -->
+<section class="dashboard">
 
-                <p>
-                    تعداد پزشکان ثبت شده
-                </p>
 
+    <!-- Header -->
+    <div class="dashboard-header">
+
+        <span class="hero-badge">
+            📊 مدیریت بیمارستان
+        </span>
+
+        <h1>
+            داشبورد مدیریت
+        </h1>
+
+        <p>
+            مدیریت پزشکان و نوبت‌های بیمارستان
+        </p>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="dashboard-stats">
+
+
+        <!-- Doctors -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👨‍⚕️
             </div>
 
+            <div>
 
-            <!-- Appointments Count -->
-            <div class="doctor-card">
+                <span>
+                    پزشکان
+                </span>
 
-                <h2>📅 نوبت‌ها</h2>
-
-                <h1>
-                    {{ appointments|length }}
-                </h1>
-
-                <p>
-                    تعداد نوبت‌های ثبت شده
-                </p>
+                <strong>
+                    {{ doctors.count }}
+                </strong>
 
             </div>
 
         </div>
 
 
-        <!-- Doctors Section -->
+        <!-- Appointments -->
+        <div class="stat-card">
 
-        <h2 style="margin-top: 50px;">
-            👨‍⚕️ پزشکان
-        </h2>
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div>
+
+                <span>
+                    کل نوبت‌ها
+                </span>
+
+                <strong>
+                    {{ appointments.count }}
+                </strong>
+
+            </div>
+
+        </div>
 
 
-        <div class="doctor-container">
+        <!-- Patients -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <span>
+                    بیماران
+                </span>
+
+                <strong>
+                    {{ patients|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Pending -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🟡
+            </div>
+
+            <div>
+
+                <span>
+                    در انتظار
+                </span>
+
+                <strong>
+                    {{ pending_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Confirmed -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <span>
+                    تأیید شده
+                </span>
+
+                <strong>
+                    {{ confirmed_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Cancelled -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔴
+            </div>
+
+            <div>
+
+                <span>
+                    لغو شده
+                </span>
+
+                <strong>
+                    {{ cancelled_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Completed -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔵
+            </div>
+
+            <div>
+
+                <span>
+                    انجام شده
+                </span>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Doctors Section -->
+    <div class="dashboard-section">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    👨‍⚕️ پزشکان
+                </h2>
+
+                <p>
+                    لیست پزشکان ثبت شده
+                </p>
+
+            </div>
+
+
+            <a class="button"
+               href="{% url 'add_doctor' %}">
+
+                + افزودن پزشک
+
+            </a>
+
+        </div>
+
+
+
+        <div class="dashboard-table">
+
 
             {% for doctor in doctors %}
 
-                <div class="doctor-card">
-
-                    <h3>
-                        {{ doctor.name }}
-                    </h3>
-
-                    <p>
-                        🩺 تخصص:
-                        {{ doctor.specialty }}
-                    </p>
-
-                    <p>
-                        📞 تلفن:
-                        {{ doctor.phone }}
-                    </p>
+                <div class="dashboard-row">
 
 
-                    <!-- Edit Doctor -->
+                    <!-- Doctor -->
+                    <div class="dashboard-doctor">
 
-                    <a
-                        class="button"
-                        href="{% url 'edit_doctor' doctor.id %}"
-                    >
-                        ✏️ ویرایش
-                    </a>
+                        <div class="doctor-mini-icon">
+                            👨‍⚕️
+                        </div>
 
 
-                    <!-- Delete Doctor -->
+                        <div>
 
-                    <form
-                        method="POST"
-                        action="{% url 'delete_doctor' doctor.id %}"
-                        style="margin-top: 10px;"
-                    >
+                            <strong>
+                                {{ doctor.name }}
+                            </strong>
 
-                        {% csrf_token %}
+                            <span>
+                                {{ doctor.specialty }}
+                            </span>
 
-                        <button type="submit">
-                            🗑️ حذف پزشک
-                        </button>
+                        </div>
 
-                    </form>
+                    </div>
+
+
+
+                    <!-- Phone -->
+                    <div>
+
+                        📞 {{ doctor.phone }}
+
+                    </div>
+
 
                 </div>
 
+
             {% empty %}
 
-                <p>
+                <div class="dashboard-empty">
+
                     هنوز پزشکی ثبت نشده است.
-                </p>
-
-            {% endfor %}
-
-        </div>
-
-
-        <!-- Appointments Section -->
-
-        <h2 style="margin-top: 50px;">
-            📋 نوبت‌های ثبت شده
-        </h2>
-
-
-        <div class="doctor-container">
-
-            {% for item in appointments %}
-
-                <div class="doctor-card">
-
-                    <h3>
-                        👤 {{ item.patient_name }}
-                    </h3>
-
-                    <p>
-                        👨‍⚕️ پزشک:
-                        {{ item.doctor.name }}
-                    </p>
-
-                    <p>
-                        📅 تاریخ:
-                        {{ item.date }}
-                    </p>
-
-                    <p>
-                        ⏰ ساعت:
-                        {{ item.time }}
-                    </p>
-
-
-                    <!-- Delete Appointment -->
-
-                    <form
-                        method="POST"
-                        action="{% url 'delete_appointment' item.id %}"
-                    >
-
-                        {% csrf_token %}
-
-                        <button type="submit">
-                            🗑️ حذف نوبت
-                        </button>
-
-                    </form>
 
                 </div>
 
-            {% empty %}
-
-                <p>
-                    هنوز نوبتی ثبت نشده است.
-                </p>
-
             {% endfor %}
+
 
         </div>
 
-    </section>
+
+    </div>
+
+
+
+    <!-- Appointments Section -->
+    <div class="dashboard-section appointments-dashboard">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    📅 نوبت‌های ثبت شده
+                </h2>
+
+                <p>
+                    آخرین نوبت‌های ثبت شده در بیمارستان
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-table">
+
+
+            {% for appointment in appointments %}
+
+
+                <div class="dashboard-row">
+
+
+                    <!-- Patient & Doctor -->
+                    <div class="dashboard-doctor">
+
+
+                        <div class="doctor-mini-icon">
+                            📅
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {{ appointment.patient_name }}
+                            </strong>
+
+
+                            <span>
+
+                                پزشک:
+                                {{ appointment.doctor.name }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- Appointment Information -->
+                    <div class="appointment-dashboard-info">
+
+
+                        <span>
+
+                            📅 {{ appointment.date }}
+
+                        </span>
+
+
+                        <span>
+
+                            ⏰ {{ appointment.time }}
+
+                        </span>
+
+
+                        <!-- Status -->
+
+                        {% if appointment.status == "pending" %}
+
+                            <span class="status pending">
+
+                                🟡 در انتظار
+
+                            </span>
+
+
+                        {% elif appointment.status == "confirmed" %}
+
+                            <span class="status confirmed">
+
+                                🟢 تأیید شده
+
+                            </span>
+
+
+                        {% elif appointment.status == "cancelled" %}
+
+                            <span class="status cancelled">
+
+                                🔴 لغو شده
+
+                            </span>
+
+
+                        {% elif appointment.status == "completed" %}
+
+                            <span class="status completed">
+
+                                🔵 انجام شده
+
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <div class="dashboard-empty">
+
+                    📭 هنوز هیچ نوبتی ثبت نشده است.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- Footer -->
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        پنل مدیریت بیمارستان
+    </p>
+
+</footer>
+
 
 </body>
 
 </html>
+

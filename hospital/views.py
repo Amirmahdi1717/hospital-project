@@ -3,6 +3,7 @@ from .models import Doctor, Appointment
 from .forms import AppointmentForm , DoctorForm , RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+# from django.contrib import messages
 
 
 def home(request):
@@ -12,18 +13,6 @@ def home(request):
         "doctors": doctors
     })
 
-
-def appointment(request):
-    if request.method == "POST":
-        form = AppointmentForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect("home")
-    else:
-        form = AppointmentForm()
-
-    return render(request, "appointment.html", {"form": form})
 
 
 @login_required(login_url="/login/")
@@ -73,9 +62,22 @@ def dashboard(request):
     doctors = Doctor.objects.all()
     appointments = Appointment.objects.all().order_by("-date", "-time")
 
+    patients = Appointment.objects.values("patient").distinct()
+
+    pending_count = appointments.filter(status="pending").count()
+    confirmed_count = appointments.filter(status="confirmed").count()
+    cancelled_count = appointments.filter(status="cancelled").count()
+    completed_count = appointments.filter(status="completed").count()
+
     return render(request, "dashboard.html", {
         "doctors": doctors,
         "appointments": appointments,
+        "patients": patients,
+
+        "pending_count": pending_count,
+        "confirmed_count": confirmed_count,
+        "cancelled_count": cancelled_count,
+        "completed_count": completed_count,
     })
 
 
@@ -149,15 +151,13 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(
-        request,
-        "register.html",
-        {"form": form}
-    )
+    return render(request,"register.html",{"form": form})
 
-@login_required
+@login_required(login_url="/login/")
 def appointments(request):
-    appointments = Appointment.objects.all().order_by("-date", "-time")
+    appointments = Appointment.objects.filter(
+        patient=request.user
+    ).order_by("-date", "-time")
 
     return render(
         request,
@@ -166,6 +166,7 @@ def appointments(request):
             "appointments": appointments
         }
     )
+
 
 @login_required(login_url="/login/")
 def my_appointments(request):
@@ -197,3 +198,24 @@ def cancel_appointment(request, appointment_id):
             appointment.delete()
 
     return redirect("my_appointments")
+
+
+@login_required(login_url="/login/")
+def profile(request):
+    return render(request, "profile.html")
+
+@login_required(login_url="/login/")
+def edit_profile(request):
+
+    if request.method == "POST":
+
+        user = request.user
+
+        user.first_name = request.POST.get("first_name", "")
+        user.last_name = request.POST.get("last_name", "")
+
+        user.save()
+
+        return redirect("profile")
+
+    return render(request, "edit_profile.html")
