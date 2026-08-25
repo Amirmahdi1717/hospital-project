@@ -2926,19 +2926,16 @@ footer span {
     opacity: 0.85;
 }
 
-/* فاصله بین بخش‌های داشبورد */
 
 .dashboard-section {
     margin-bottom: 32px;
 }
 
-/* فاصله مخصوص بخش بیماران */
 
 .dashboard-section + .dashboard-section {
     margin-top: 32px;
 }
 
-/* آخرین بخش فاصله اضافه نداشته باشد */
 
 .dashboard-section:last-child {
     margin-bottom: 0;
