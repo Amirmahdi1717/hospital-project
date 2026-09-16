@@ -1,5 +1,32 @@
 from django.contrib import admin
-from .models import Doctor, Appointment
+from .models import Doctor, Appointment, Department, Specialty
+
+
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+    )
+
+    search_fields = (
+        "name",
+    )
+
+
+@admin.register(Specialty)
+class SpecialtyAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "department",
+    )
+
+    list_filter = (
+        "department",
+    )
+
+    search_fields = (
+        "name",
+    )
 
 
 @admin.register(Doctor)
@@ -10,9 +37,14 @@ class DoctorAdmin(admin.ModelAdmin):
         "phone",
     )
 
+    list_filter = (
+        "specialty__department",
+        "specialty",
+    )
+
     search_fields = (
         "name",
-        "specialty",
+        "specialty__name",
     )
 
 

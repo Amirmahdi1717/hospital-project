@@ -1,4 +1,3 @@
-
 from django import forms
 from .models import Appointment, Doctor
 from django.contrib.auth.models import User
@@ -57,12 +56,6 @@ class DoctorForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "placeholder": "نام پزشک را وارد کنید"
-                }
-            ),
-
-            "specialty": forms.TextInput(
-                attrs={
-                    "placeholder": "تخصص پزشک را وارد کنید"
                 }
             ),
 

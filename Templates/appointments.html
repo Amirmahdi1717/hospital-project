@@ -14,6 +14,16 @@
 
 <body>
 
+{% if messages %}
+    <div class="messages-wrapper">
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% else %}✅{% endif %} {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
     <nav>
         <h2>🏥 بیمارستان سلامت</h2>
 
@@ -54,6 +64,32 @@
                     ⏰ ساعت:
                     {{ item.time }}
                 </p>
+
+                <p>
+                    {% if item.status == "pending" %}
+                        <span class="status pending">🟡 در انتظار</span>
+                    {% elif item.status == "confirmed" %}
+                        <span class="status confirmed">🟢 تأیید شده</span>
+                    {% elif item.status == "cancelled" %}
+                        <span class="status cancelled">🔴 لغو شده</span>
+                    {% elif item.status == "completed" %}
+                        <span class="status completed">🔵 انجام شده</span>
+                    {% endif %}
+                </p>
+
+                <form
+                    method="POST"
+                    action="{% url 'update_appointment_status' item.id %}"
+                >
+                    {% csrf_token %}
+
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="pending" {% if item.status == "pending" %}selected{% endif %}>🟡 در انتظار</option>
+                        <option value="confirmed" {% if item.status == "confirmed" %}selected{% endif %}>🟢 تأیید شده</option>
+                        <option value="cancelled" {% if item.status == "cancelled" %}selected{% endif %}>🔴 لغو شده</option>
+                        <option value="completed" {% if item.status == "completed" %}selected{% endif %}>🔵 انجام شده</option>
+                    </select>
+                </form>
 
 
                 <form

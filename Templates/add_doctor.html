@@ -60,13 +60,13 @@
 
         {% if messages %}
 
-            {% for message in messages %}
-
-                <div class="success-message">
-                    ✅ {{ message }}
-                </div>
-
-            {% endfor %}
+            <div class="messages-wrapper">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                        {% if message.tags == 'error' %}⚠️{% else %}✅{% endif %} {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
 
         {% endif %}
 
@@ -75,55 +75,25 @@
 
             {% csrf_token %}
 
-            <div class="doctor-field">
+            {% for field in form %}
 
-                <label for="name">
-                    نام پزشک
-                </label>
+                <div class="doctor-field">
 
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="مثلاً دکتر علی رضایی"
-                    required
-                >
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
 
-            </div>
+                    {{ field }}
 
+                    {% if field.errors %}
+                        <p class="field-error">
+                            {{ field.errors.0 }}
+                        </p>
+                    {% endif %}
 
-            <div class="doctor-field">
+                </div>
 
-                <label for="specialty">
-                    تخصص
-                </label>
-
-                <input
-                    type="text"
-                    id="specialty"
-                    name="specialty"
-                    placeholder="مثلاً متخصص قلب و عروق"
-                    required
-                >
-
-            </div>
-
-
-            <div class="doctor-field">
-
-                <label for="phone">
-                    شماره تماس
-                </label>
-
-                <input
-                    type="text"
-                    id="phone"
-                    name="phone"
-                    placeholder="مثلاً 09123456789"
-                    required
-                >
-
-            </div>
+            {% endfor %}
 
 
             <button

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.db.models import Count
-# from django.contrib import messages
+from django.contrib import messages
 
 
 def home(request):
@@ -37,6 +37,11 @@ def appointment(request):
 
             new_appointment.save()
 
+            messages.success(
+                request,
+                "نوبت شما با موفقیت ثبت شد و در انتظار تأیید است."
+            )
+
             return redirect("home")
 
     else:
@@ -55,6 +60,8 @@ def delete_appointment(request, appointment_id):
     if request.method == "POST":
         appointment = Appointment.objects.get(id=appointment_id)
         appointment.delete()
+
+        messages.success(request, "نوبت با موفقیت حذف شد.")
 
     return redirect("appointments")
 
@@ -134,6 +141,8 @@ def update_appointment_status(request, appointment_id):
                 appointment.status = new_status
                 appointment.save()
 
+                messages.success(request, "وضعیت نوبت به‌روزرسانی شد.")
+
     return redirect("dashboard")
 
 
@@ -145,6 +154,9 @@ def add_doctor(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(request, "پزشک جدید با موفقیت اضافه شد.")
+
             return redirect("dashboard")
 
     else:
@@ -165,6 +177,9 @@ def edit_doctor(request, doctor_id):
 
         if form.is_valid():
             form.save()
+
+            messages.success(request, "اطلاعات پزشک با موفقیت ویرایش شد.")
+
             return redirect("dashboard")
 
     else:
@@ -181,6 +196,8 @@ def delete_doctor(request, doctor_id):
     if request.method == "POST":
         doctor = Doctor.objects.get(id=doctor_id)
         doctor.delete()
+
+        messages.success(request, "پزشک با موفقیت حذف شد.")
 
     return redirect("dashboard")
 
@@ -202,6 +219,11 @@ def register(request):
 
             form.save()
 
+            messages.success(
+                request,
+                "ثبت‌نام با موفقیت انجام شد. حالا وارد حساب خود شوید."
+            )
+
             return redirect("login")
 
     else:
@@ -209,10 +231,10 @@ def register(request):
 
     return render(request,"register.html",{"form": form})
 
-@login_required(login_url="/login/")
+@staff_member_required(login_url="/login/")
 def appointments(request):
-    appointments = Appointment.objects.filter(
-        patient=request.user
+    appointments = Appointment.objects.all().select_related(
+        "doctor"
     ).order_by("-date", "-time")
 
     return render(
@@ -247,11 +269,15 @@ def cancel_appointment(request, appointment_id):
 
         appointment = Appointment.objects.filter(
             id=appointment_id,
-            patient=request.user
+            patient=request.user,
+            status__in=["pending", "confirmed"],
         ).first()
 
         if appointment:
-            appointment.delete()
+            appointment.status = "cancelled"
+            appointment.save()
+
+            messages.success(request, "نوبت شما با موفقیت لغو شد.")
 
     return redirect("my_appointments")
 
@@ -271,6 +297,8 @@ def edit_profile(request):
         user.last_name = request.POST.get("last_name", "")
 
         user.save()
+
+        messages.success(request, "پروفایل شما با موفقیت به‌روزرسانی شد.")
 
         return redirect("profile")
 

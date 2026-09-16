@@ -14,6 +14,16 @@
 
 <body>
 
+{% if messages %}
+    <div class="messages-wrapper">
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% else %}✅{% endif %} {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <nav>
     <h2>🏥 بیمارستان سلامت</h2>
 

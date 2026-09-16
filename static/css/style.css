@@ -1,5 +1,3 @@
-
-
 * {
     box-sizing: border-box;
 }
@@ -900,7 +898,7 @@ nav form button:hover {
         ),
         #7e22ce;
 
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 
@@ -2179,6 +2177,28 @@ nav form button:hover {
     color: #166534;
 
     font-size: 13px;
+}
+
+.error-message {
+    margin-bottom: 20px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    font-size: 13px;
+}
+
+.messages-wrapper {
+    max-width: 600px;
+
+    margin: 20px auto 0;
+
+    padding: 0 20px;
 }
 
 

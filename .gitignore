@@ -3,6 +3,7 @@ venv/
 env/
 
 __pycache__/
+
 *.py[cod]
 
 db.sqlite3
@@ -10,3 +11,8 @@ db.sqlite3
 .env
 
 media/
+
+.env
+db.sqlite3
+__pycache__/
+*.pyc

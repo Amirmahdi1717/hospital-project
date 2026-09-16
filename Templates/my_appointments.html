@@ -1,4 +1,4 @@
-```html
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -14,6 +14,16 @@
 </head>
 
 <body class="appointments-page">
+
+{% if messages %}
+    <div class="messages-wrapper">
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% else %}✅{% endif %} {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 <nav>
 
@@ -263,4 +273,3 @@
 
 </body>
 </html>
-```
