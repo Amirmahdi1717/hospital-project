@@ -1,5 +1,5 @@
 from django import forms
-from .models import Appointment, Doctor
+from .models import Appointment, Doctor, MedicalRecord
 from django.contrib.auth.models import User
 
 
@@ -147,3 +147,54 @@ class RegisterForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class MedicalRecordForm(forms.ModelForm):
+
+    class Meta:
+        model = MedicalRecord
+
+        fields = [
+            "doctor",
+            "visit_date",
+            "diagnosis",
+            "prescription",
+            "notes",
+        ]
+
+        labels = {
+            "doctor": "پزشک معالج",
+            "visit_date": "تاریخ ویزیت",
+            "diagnosis": "بیماری / تشخیص",
+            "prescription": "نسخه",
+            "notes": "توضیحات پزشک",
+        }
+
+        widgets = {
+            "visit_date": forms.DateInput(
+                attrs={
+                    "type": "date"
+                }
+            ),
+
+            "diagnosis": forms.Textarea(
+                attrs={
+                    "rows": 3,
+                    "placeholder": "مثلاً سرماخوردگی، فشار خون بالا..."
+                }
+            ),
+
+            "prescription": forms.Textarea(
+                attrs={
+                    "rows": 3,
+                    "placeholder": "داروها و دوز مصرفی (اختیاری)"
+                }
+            ),
+
+            "notes": forms.Textarea(
+                attrs={
+                    "rows": 3,
+                    "placeholder": "توضیحات تکمیلی پزشک (اختیاری)"
+                }
+            ),
+        }

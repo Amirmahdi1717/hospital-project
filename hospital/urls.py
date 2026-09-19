@@ -17,6 +17,8 @@ urlpatterns = [
     path("profile/edit/",edit_profile,name="edit_profile"),
     path("appointments/update-status/<int:appointment_id>/",update_appointment_status,name="update_appointment_status"),
     path("patient/<int:patient_id>/",patient_detail,name="patient_detail"),
+    path("patient/<int:patient_id>/medical-record/add/",add_medical_record,name="add_medical_record"),
+    path("my-medical-records/",my_medical_records,name="my_medical_records"),    
 
     
 ]

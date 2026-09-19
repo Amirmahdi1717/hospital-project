@@ -297,6 +297,113 @@
     </div>
 
 
+    <!-- ==================== MEDICAL RECORDS ==================== -->
+
+    <div class="dashboard-section">
+
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <h2>
+                    📁 سوابق پزشکی
+                </h2>
+
+                <p>
+                    بیماری‌ها، نسخه‌ها و توضیحات پزشک برای این بیمار
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'add_medical_record' patient.id %}"
+                class="button"
+            >
+                ➕ ثبت سابقه جدید
+            </a>
+
+        </div>
+
+
+        <div class="dashboard-table">
+
+
+            {% for record in records %}
+
+
+                <div class="dashboard-row">
+
+
+                    <div class="dashboard-doctor">
+
+                        <div class="doctor-mini-icon">
+                            📁
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                {{ record.diagnosis|truncatechars:40 }}
+                            </strong>
+
+                            <span>
+                                👨‍⚕️
+                                {% if record.doctor %}
+                                    {{ record.doctor.name }}
+                                {% else %}
+                                    ثبت نشده
+                                {% endif %}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="appointment-dashboard-info">
+
+                        <span>
+                            📅 {{ record.visit_date }}
+                        </span>
+
+                        {% if record.prescription %}
+                            <span>
+                                💊 {{ record.prescription|truncatechars:30 }}
+                            </span>
+                        {% endif %}
+
+                        {% if record.notes %}
+                            <span>
+                                📝 {{ record.notes|truncatechars:30 }}
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <div class="dashboard-empty">
+
+                    📭 هنوز هیچ سابقه پزشکی برای این بیمار ثبت نشده است.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
     <!-- Back Button -->
 
     <div class="patient-back-button">

@@ -82,3 +82,53 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.patient_name} - {self.doctor.name}"
+
+
+class MedicalRecord(models.Model):
+    patient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="medical_records",
+    )
+
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="medical_records",
+    )
+
+    appointment = models.ForeignKey(
+        Appointment,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="medical_records",
+    )
+
+    visit_date = models.DateField()
+
+    diagnosis = models.TextField(
+        verbose_name="بیماری / تشخیص"
+    )
+
+    prescription = models.TextField(
+        blank=True,
+        verbose_name="نسخه"
+    )
+
+    notes = models.TextField(
+        blank=True,
+        verbose_name="توضیحات پزشک"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "سابقه پزشکی"
+        verbose_name_plural = "سوابق پزشکی"
+        ordering = ["-visit_date"]
+
+    def __str__(self):
+        return f"{self.patient} - {self.visit_date}"

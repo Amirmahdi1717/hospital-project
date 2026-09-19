@@ -42,6 +42,11 @@
             📋 نوبت‌های من
         </a>
 
+        <a class="button"
+           href="{% url 'my_medical_records' %}">
+            📁 سوابق پزشکی
+        </a>
+
     </div>
 
 </nav>
@@ -113,6 +118,13 @@
                 href="{% url 'my_appointments' %}"
             >
                 📋 مشاهده نوبت‌ها
+            </a>
+
+            <a
+                class="button"
+                href="{% url 'my_medical_records' %}"
+            >
+                📁 سوابق پزشکی
             </a>
 
             <a

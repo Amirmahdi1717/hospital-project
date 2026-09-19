@@ -1,0 +1,218 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>سوابق پزشکی من | بیمارستان سلامت</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="appointments-page">
+
+{% if messages %}
+    <div class="messages-wrapper">
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {% if message.tags == 'error' %}⚠️{% else %}✅{% endif %} {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<nav>
+
+    <h2>🏥 بیمارستان سلامت</h2>
+
+    <div>
+
+        <a href="{% url 'home' %}">
+            🏠 صفحه اصلی
+        </a>
+
+        <a class="button" href="{% url 'my_appointments' %}">
+            📋 نوبت‌های من
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="appointments-section">
+
+    <div class="appointments-header">
+
+        <span class="hero-badge">
+            📁 پرونده پزشکی
+        </span>
+
+        <h1>
+            سوابق پزشکی من
+        </h1>
+
+        <p>
+            سلام {{ user.first_name|default:user.username }} 👋
+            <br>
+            تاریخچه بیماری‌ها، نسخه‌ها و توضیحات پزشک شما.
+        </p>
+
+    </div>
+
+
+    <div class="appointments-container">
+
+        {% for record in records %}
+
+            <div class="appointment-card">
+
+                <div class="appointment-card-top">
+
+                    <div class="doctor-mini-icon">
+                        📁
+                    </div>
+
+                    <div>
+
+                        <span class="appointment-label">
+                            بیماری / تشخیص
+                        </span>
+
+                        <h2>
+                            {{ record.diagnosis }}
+                        </h2>
+
+                        <p class="doctor-specialty">
+                            👨‍⚕️
+                            {% if record.doctor %}
+                                {{ record.doctor.name }}
+                            {% else %}
+                                ثبت نشده
+                            {% endif %}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="appointment-info">
+
+                    <div class="info-item">
+
+                        <span class="info-icon">
+                            📅
+                        </span>
+
+                        <div>
+
+                            <small>
+                                تاریخ ویزیت
+                            </small>
+
+                            <strong>
+                                {{ record.visit_date }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if record.prescription %}
+
+                        <div class="info-item">
+
+                            <span class="info-icon">
+                                💊
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    نسخه
+                                </small>
+
+                                <strong>
+                                    {{ record.prescription }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if record.notes %}
+
+                        <div class="info-item">
+
+                            <span class="info-icon">
+                                📝
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    توضیحات پزشک
+                                </small>
+
+                                <strong>
+                                    {{ record.notes }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-appointments">
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h2>
+                    هنوز سابقه پزشکی ثبت نشده
+                </h2>
+
+                <p>
+                    بعد از هر ویزیت، پزشک سابقه شما را اینجا ثبت می‌کند.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <h3>
+        🏥 بیمارستان سلامت
+    </h3>
+
+    <p>
+        ارائه خدمات پزشکی با کیفیت و مطمئن
+    </p>
+
+</footer>
+
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Doctor, Appointment
-from .forms import AppointmentForm , DoctorForm , RegisterForm
+from .models import Doctor, Appointment, MedicalRecord
+from .forms import AppointmentForm , DoctorForm , RegisterForm, MedicalRecordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
@@ -320,11 +320,68 @@ def patient_detail(request, patient_id):
         "-time"
     )
 
+    records = MedicalRecord.objects.filter(
+        patient=patient
+    ).select_related(
+        "doctor"
+    ).order_by(
+        "-visit_date"
+    )
+
     return render(
         request,
         "patient_detail.html",
         {
             "patient": patient,
             "appointments": appointments,
+            "records": records,
+        }
+    )
+
+
+@staff_member_required(login_url="/login/")
+def add_medical_record(request, patient_id):
+    patient = User.objects.get(id=patient_id)
+
+    if request.method == "POST":
+        form = MedicalRecordForm(request.POST)
+
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.patient = patient
+            record.save()
+
+            messages.success(request, "سابقه پزشکی جدید ثبت شد.")
+
+            return redirect("patient_detail", patient_id=patient.id)
+
+    else:
+        form = MedicalRecordForm()
+
+    return render(
+        request,
+        "add_medical_record.html",
+        {
+            "form": form,
+            "patient": patient,
+        }
+    )
+
+
+@login_required(login_url="/login/")
+def my_medical_records(request):
+    records = MedicalRecord.objects.filter(
+        patient=request.user
+    ).select_related(
+        "doctor"
+    ).order_by(
+        "-visit_date"
+    )
+
+    return render(
+        request,
+        "my_medical_records.html",
+        {
+            "records": records,
         }
     )
