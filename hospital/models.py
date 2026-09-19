@@ -80,6 +80,19 @@ class Appointment(models.Model):
         default="pending"
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["doctor", "date", "time"],
+                condition=models.Q(status__in=["pending", "confirmed"]),
+                name="unique_active_appointment_per_doctor_slot",
+                violation_error_message=(
+                    "این پزشک در این تاریخ و ساعت قبلاً نوبت دارد. "
+                    "لطفاً تاریخ یا ساعت دیگری انتخاب کنید."
+                ),
+            )
+        ]
+
     def __str__(self):
         return f"{self.patient_name} - {self.doctor.name}"
 

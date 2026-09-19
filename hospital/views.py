@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Doctor, Appointment, MedicalRecord
 from .forms import AppointmentForm , DoctorForm , RegisterForm, MedicalRecordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.db import IntegrityError
 from django.contrib import messages
 
 
@@ -35,7 +36,21 @@ def appointment(request):
                 or request.user.username
             )
 
-            new_appointment.save()
+            try:
+                new_appointment.save()
+
+            except IntegrityError:
+                messages.error(
+                    request,
+                    "این پزشک در این تاریخ و ساعت قبلاً نوبت دارد. "
+                    "لطفاً تاریخ یا ساعت دیگری انتخاب کنید."
+                )
+
+                return render(
+                    request,
+                    "appointment.html",
+                    {"form": form}
+                )
 
             messages.success(
                 request,
@@ -58,7 +73,7 @@ def appointment(request):
 def delete_appointment(request, appointment_id):
 
     if request.method == "POST":
-        appointment = Appointment.objects.get(id=appointment_id)
+        appointment = get_object_or_404(Appointment, id=appointment_id)
         appointment.delete()
 
         messages.success(request, "نوبت با موفقیت حذف شد.")
@@ -170,7 +185,7 @@ def add_doctor(request):
 
 @staff_member_required(login_url="/login/")
 def edit_doctor(request, doctor_id):
-    doctor = Doctor.objects.get(id=doctor_id)
+    doctor = get_object_or_404(Doctor, id=doctor_id)
 
     if request.method == "POST":
         form = DoctorForm(request.POST, instance=doctor)
@@ -194,7 +209,7 @@ def edit_doctor(request, doctor_id):
 @staff_member_required(login_url="/login/")
 def delete_doctor(request, doctor_id):
     if request.method == "POST":
-        doctor = Doctor.objects.get(id=doctor_id)
+        doctor = get_object_or_404(Doctor, id=doctor_id)
         doctor.delete()
 
         messages.success(request, "پزشک با موفقیت حذف شد.")
@@ -203,7 +218,7 @@ def delete_doctor(request, doctor_id):
 
 
 def doctor_detail(request, doctor_id):
-    doctor = Doctor.objects.get(id=doctor_id)
+    doctor = get_object_or_404(Doctor, id=doctor_id)
 
     return render(request, "doctor_detail.html", {
         "doctor": doctor
@@ -307,9 +322,7 @@ def edit_profile(request):
 @staff_member_required(login_url="/login/")
 def patient_detail(request, patient_id):
 
-    patient = User.objects.get(
-        id=patient_id
-    )
+    patient = get_object_or_404(User, id=patient_id)
 
     appointments = Appointment.objects.filter(
         patient=patient
@@ -341,7 +354,7 @@ def patient_detail(request, patient_id):
 
 @staff_member_required(login_url="/login/")
 def add_medical_record(request, patient_id):
-    patient = User.objects.get(id=patient_id)
+    patient = get_object_or_404(User, id=patient_id)
 
     if request.method == "POST":
         form = MedicalRecordForm(request.POST)
