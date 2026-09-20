@@ -86,6 +86,27 @@
         </div>
 
 
+        {% for field in profile_form %}
+
+            <div class="edit-field">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                    <p class="field-error">
+                        {{ field.errors.0 }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+
         <button
             type="submit"
             class="button edit-submit"

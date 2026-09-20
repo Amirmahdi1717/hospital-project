@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.password_validation import validate_password
-from .models import Appointment, Doctor, MedicalRecord
+from .models import Appointment, Doctor, MedicalRecord, PatientProfile
 from django.contrib.auth.models import User
 
 
@@ -245,6 +245,43 @@ class MedicalRecordForm(forms.ModelForm):
                 attrs={
                     "rows": 3,
                     "placeholder": "توضیحات تکمیلی پزشک (اختیاری)"
+                }
+            ),
+        }
+
+class PatientProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = PatientProfile
+
+        fields = [
+            "phone",
+            "national_code",
+            "birth_date",
+        ]
+
+        labels = {
+            "phone": "شماره تماس",
+            "national_code": "کد ملی",
+            "birth_date": "تاریخ تولد",
+        }
+
+        widgets = {
+            "phone": forms.TextInput(
+                attrs={
+                    "placeholder": "مثلاً 09123456789"
+                }
+            ),
+
+            "national_code": forms.TextInput(
+                attrs={
+                    "placeholder": "کد ملی ۱۰ رقمی"
+                }
+            ),
+
+            "birth_date": forms.DateInput(
+                attrs={
+                    "type": "date"
                 }
             ),
         }

@@ -1,23 +1,35 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Doctor, Appointment, MedicalRecord
-from .forms import AppointmentForm , DoctorForm , RegisterForm, MedicalRecordForm
+from .models import Doctor, Appointment, MedicalRecord, PatientProfile
+from .forms import AppointmentForm , DoctorForm , RegisterForm, MedicalRecordForm, PatientProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db import IntegrityError
+from django.core.paginator import Paginator
 from django.contrib import messages
 
 
+# دسترسی: عمومی — نیازی به ورود نیست
 def home(request):
-    doctors = Doctor.objects.all()
+    query = request.GET.get("q", "").strip()
+
+    doctors = Doctor.objects.select_related("specialty")
+
+    if query:
+        doctors = doctors.filter(
+            Q(name__icontains=query)
+            | Q(specialty__name__icontains=query)
+        )
 
     return render(request, "home.html", {
-        "doctors": doctors
+        "doctors": doctors,
+        "query": query,
     })
 
 
 
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def appointment(request):
 
@@ -69,6 +81,7 @@ def appointment(request):
     )
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def delete_appointment(request, appointment_id):
 
@@ -81,6 +94,7 @@ def delete_appointment(request, appointment_id):
     return redirect("appointments")
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def dashboard(request):
 
@@ -119,12 +133,16 @@ def dashboard(request):
         status="completed"
     ).count()
 
+    paginator = Paginator(appointments, 10)
+    page_number = request.GET.get("page")
+    appointments_page = paginator.get_page(page_number)
+
     return render(
         request,
         "dashboard.html",
         {
             "doctors": doctors,
-            "appointments": appointments,
+            "appointments": appointments_page,
             "patients": patients,
 
             "pending_count": pending_count,
@@ -135,6 +153,7 @@ def dashboard(request):
     )
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def update_appointment_status(request, appointment_id):
     if request.method == "POST":
@@ -161,6 +180,7 @@ def update_appointment_status(request, appointment_id):
     return redirect("dashboard")
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def add_doctor(request):
 
@@ -183,6 +203,7 @@ def add_doctor(request):
 
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def edit_doctor(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
@@ -206,6 +227,7 @@ def edit_doctor(request, doctor_id):
     })
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def delete_doctor(request, doctor_id):
     if request.method == "POST":
@@ -217,6 +239,7 @@ def delete_doctor(request, doctor_id):
     return redirect("dashboard")
 
 
+# دسترسی: عمومی — نیازی به ورود نیست
 def doctor_detail(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
 
@@ -224,6 +247,7 @@ def doctor_detail(request, doctor_id):
         "doctor": doctor
     })
 
+# دسترسی: عمومی — نیازی به ورود نیست
 def register(request):
 
     if request.method == "POST":
@@ -246,37 +270,48 @@ def register(request):
 
     return render(request,"register.html",{"form": form})
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def appointments(request):
-    appointments = Appointment.objects.all().select_related(
+    all_appointments = Appointment.objects.all().select_related(
         "doctor"
     ).order_by("-date", "-time")
+
+    paginator = Paginator(all_appointments, 10)
+    page_number = request.GET.get("page")
+    appointments_page = paginator.get_page(page_number)
 
     return render(
         request,
         "appointments.html",
         {
-            "appointments": appointments
+            "appointments": appointments_page
         }
     )
 
 
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def my_appointments(request):
 
-    appointments = Appointment.objects.filter(
+    all_appointments = Appointment.objects.filter(
         patient=request.user
     ).order_by("-date", "-time")
+
+    paginator = Paginator(all_appointments, 10)
+    page_number = request.GET.get("page")
+    appointments_page = paginator.get_page(page_number)
 
     return render(
         request,
         "my_appointments.html",
         {
-            "appointments": appointments
+            "appointments": appointments_page
         }
     )
 
 
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def cancel_appointment(request, appointment_id):
 
@@ -297,12 +332,24 @@ def cancel_appointment(request, appointment_id):
     return redirect("my_appointments")
 
 
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def profile(request):
-    return render(request, "profile.html")
+    patient_profile, _ = PatientProfile.objects.get_or_create(
+        user=request.user
+    )
 
+    return render(request, "profile.html", {
+        "patient_profile": patient_profile,
+    })
+
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def edit_profile(request):
+
+    patient_profile, _ = PatientProfile.objects.get_or_create(
+        user=request.user
+    )
 
     if request.method == "POST":
 
@@ -313,12 +360,26 @@ def edit_profile(request):
 
         user.save()
 
+        profile_form = PatientProfileForm(
+            request.POST,
+            instance=patient_profile
+        )
+
+        if profile_form.is_valid():
+            profile_form.save()
+
         messages.success(request, "پروفایل شما با موفقیت به‌روزرسانی شد.")
 
         return redirect("profile")
 
-    return render(request, "edit_profile.html")
+    else:
+        profile_form = PatientProfileForm(instance=patient_profile)
 
+    return render(request, "edit_profile.html", {
+        "profile_form": profile_form,
+    })
+
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def patient_detail(request, patient_id):
 
@@ -352,6 +413,7 @@ def patient_detail(request, patient_id):
     )
 
 
+# دسترسی: فقط ادمین (staff)
 @staff_member_required(login_url="/login/")
 def add_medical_record(request, patient_id):
     patient = get_object_or_404(User, id=patient_id)
@@ -381,6 +443,7 @@ def add_medical_record(request, patient_id):
     )
 
 
+# دسترسی: فقط بیمار (کاربر لاگین‌کرده)
 @login_required(login_url="/login/")
 def my_medical_records(request):
     records = MedicalRecord.objects.filter(

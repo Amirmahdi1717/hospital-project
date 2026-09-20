@@ -104,6 +104,39 @@
             </div>
 
 
+            <div class="profile-item">
+
+                <span>📞 شماره تماس</span>
+
+                <strong>
+                    {{ patient_profile.phone|default:"ثبت نشده" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>🪪 کد ملی</span>
+
+                <strong>
+                    {{ patient_profile.national_code|default:"ثبت نشده" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>🎂 تاریخ تولد</span>
+
+                <strong>
+                    {{ patient_profile.birth_date|default:"ثبت نشده" }}
+                </strong>
+
+            </div>
+
+
         </div>
 
 

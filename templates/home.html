@@ -291,6 +291,18 @@
     </div>
 
 
+    <form method="GET" class="doctor-search">
+
+        <input
+            type="text"
+            name="q"
+            value="{{ query|default:'' }}"
+            placeholder="🔍 جستجو بر اساس نام پزشک یا تخصص..."
+        >
+
+    </form>
+
+
     <div class="doctor-container">
 
         {% for doctor in doctors %}
@@ -333,7 +345,11 @@
         {% empty %}
 
             <p class="no-doctors">
-                هنوز پزشکی ثبت نشده است.
+                {% if query %}
+                    پزشکی با این مشخصات پیدا نشد.
+                {% else %}
+                    هنوز پزشکی ثبت نشده است.
+                {% endif %}
             </p>
 
         {% endfor %}

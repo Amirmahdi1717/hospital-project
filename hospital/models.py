@@ -145,3 +145,36 @@ class MedicalRecord(models.Model):
 
     def __str__(self):
         return f"{self.patient} - {self.visit_date}"
+
+
+class PatientProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="patient_profile",
+    )
+
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="شماره تماس"
+    )
+
+    national_code = models.CharField(
+        max_length=10,
+        blank=True,
+        verbose_name="کد ملی"
+    )
+
+    birth_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="تاریخ تولد"
+    )
+
+    class Meta:
+        verbose_name = "پروفایل بیمار"
+        verbose_name_plural = "پروفایل‌های بیمار"
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username

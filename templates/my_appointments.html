@@ -258,6 +258,31 @@
 
     </div>
 
+
+    {% if appointments.has_other_pages %}
+
+        <div class="pagination">
+
+            {% if appointments.has_previous %}
+                <a href="?page={{ appointments.previous_page_number }}">« قبلی</a>
+            {% else %}
+                <span class="disabled">« قبلی</span>
+            {% endif %}
+
+            <span class="current-page">
+                صفحه {{ appointments.number }} از {{ appointments.paginator.num_pages }}
+            </span>
+
+            {% if appointments.has_next %}
+                <a href="?page={{ appointments.next_page_number }}">بعدی »</a>
+            {% else %}
+                <span class="disabled">بعدی »</span>
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
 </section>
 
 
