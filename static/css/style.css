@@ -127,12 +127,15 @@ nav a:hover {
 }
 
 .doctor-search {
-    max-width: 420px;
+    max-width: 480px;
     margin: 0 auto 35px;
+
+    display: flex;
+    gap: 10px;
 }
 
 .doctor-search input {
-    width: 100%;
+    flex: 1;
 
     height: 50px;
 
@@ -151,6 +154,30 @@ nav a:hover {
 
 .doctor-search input:focus {
     border-color: #2563eb;
+}
+
+.doctor-search button {
+    height: 50px;
+
+    padding: 0 24px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background: #2563eb;
+
+    color: #fff;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.doctor-search button:hover {
+    background: #1d4ed8;
 }
 
 .no-doctors {
@@ -2907,6 +2934,16 @@ footer span {
 .status.pending {
     background: #fff3cd;
     color: #856404;
+    animation: pendingPulse 2s ease-in-out infinite;
+}
+
+@keyframes pendingPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(133, 100, 4, 0.25);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(133, 100, 4, 0);
+    }
 }
 
 .status.confirmed {
@@ -3089,4 +3126,68 @@ footer span {
 
 .pagination .disabled {
     opacity: 0.4;
+}
+
+
+/* =========================
+   Extra Polish
+========================= */
+
+/* پیام‌های موفقیت/خطا با انیمیشن نرم وارد صفحه می‌شوند */
+.messages-wrapper {
+    animation: messageSlideIn 0.35s ease;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* اسکرول‌بار سفارشی هماهنگ با رنگ سایت (مرورگرهای مبتنی بر Webkit) */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #93c5fd;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+}
+
+/* دکمه‌های اصلی سایت با یه حرکت ظریف هنگام هاور */
+.button,
+button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+}
+
+/* بج‌های hero-badge با یه پالس خیلی ملایم برای جلب توجه */
+.hero-badge {
+    animation: badgeGlow 3s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.08);
+    }
 }

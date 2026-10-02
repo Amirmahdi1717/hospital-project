@@ -105,6 +105,8 @@ def dashboard(request):
         "-time"
     )
 
+    total_appointments_count = appointments.count()
+
     patients = (
         User.objects
         .filter(appointment__isnull=False)
@@ -143,6 +145,7 @@ def dashboard(request):
         {
             "doctors": doctors,
             "appointments": appointments_page,
+            "total_appointments_count": total_appointments_count,
             "patients": patients,
 
             "pending_count": pending_count,

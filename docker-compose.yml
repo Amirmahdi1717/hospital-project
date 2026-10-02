@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000   
+    env_file:
+      - .env
+    volumes:
+      # دیتابیس sqlite بیرون از کانتینر نگه داشته می‌شود
+      # تا با هر بار ری‌استارت/بیلد کانتینر از بین نرود
+      - ./db.sqlite3:/app/db.sqlite3
+    restart: unless-stopped

@@ -1,0 +1,12 @@
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+db.sqlite3
+staticfiles/
+.env
+README.md
+LICENSE

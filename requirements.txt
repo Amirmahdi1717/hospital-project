@@ -7,3 +7,5 @@ pillow==12.2.0
 sqlparse==0.5.5
 tzdata==2025.3
 python-dotenv==1.2.3
+gunicorn==23.0.0
+whitenoise==6.8.2
